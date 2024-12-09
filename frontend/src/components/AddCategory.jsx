@@ -10,7 +10,7 @@ const AddCategory = () => {
         e.preventDefault();
         console.log({ name: category }); // Debugging
 
-        axios.post('http://localhost:3000/api/add_category', { name: category })
+        axios.post('http://localhost:5000/api/add_category', { name: category })
             .then(result => {
                 if (result.data.Status) {
                     navigate('/dashboard/category');
@@ -23,10 +23,10 @@ const AddCategory = () => {
 
     return (
         <div className='d-flex justify-content-center align-items-center h-75'>
-            <div className='p-3 rounded w-25 border'>
+            <div className='p-5 rounded w-25 border'>
                 <h2>Add Category</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className='mb-3'>
+                    <div className='mb-5'>
                         <label htmlFor="category"><strong>Category:</strong></label>
                         <input
                             type="text"

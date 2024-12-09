@@ -8,7 +8,7 @@ const Dashboard = () => {
   const anvigate = useNavigate()
   axios.defaults.withCredentials = true
   const handleLogout = () => {
-    axios.get('http://localhost:3000/api/logout')
+    axios.get('http://localhost:5000/api/logout')
     .then(result => {
       if(result.data.Status) { 
         localStorage.removeItem("valid")
@@ -63,15 +63,7 @@ const Dashboard = () => {
                   <span className="ms-2 d-none d-sm-inline">Category</span>
                 </Link>
               </li>
-              <li className="w-100">
-                <Link
-                  to="/dashboard/profile"
-                  className="nav-link px-0 align-middle text-white"
-                >
-                  <i className="fs-4 bi-person ms-2"></i>
-                  <span className="ms-2 d-none d-sm-inline">Profile</span>
-                </Link>
-              </li>
+             
                <li className="w-100" onClick={handleLogout}>
               <Link
                   className="nav-link px-0 align-middle text-white"

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import './SignUp.css';
 
 function SignUp() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
  
@@ -16,10 +16,9 @@ function SignUp() {
 
     try {
       // Send the signup request to the server
-      const response = await axios.post('http://localhost:3000/api/signup', {
+      const response = await axios.post('http://localhost:5000/api/signup', {
         firstName,
         lastName,
-        username,
         password,
         email,
        
@@ -39,9 +38,9 @@ function SignUp() {
   };
 
   return (
-    <div>
+    <div className="signup-container">
       <h2>Sign Up</h2>
-      <form onSubmit={handleSignUp}>
+      <form className="signup-form" onSubmit={handleSignUp}>
         <label>
           First Name:
           <input
@@ -51,7 +50,6 @@ function SignUp() {
             required
           />
         </label>
-        <br />
         <label>
           Last Name:
           <input
@@ -61,27 +59,6 @@ function SignUp() {
             required
           />
         </label>
-        <br />
-        <label>
-          Username:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </label>
-        <br />
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        <br />
         <label>
           Email:
           <input
@@ -91,11 +68,19 @@ function SignUp() {
             required
           />
         </label>
-       
+        <label>
+          Password:
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </label>
         <button type="submit">Sign Up</button>
       </form>
     </div>
   );
-}
+};
 
 export default SignUp;

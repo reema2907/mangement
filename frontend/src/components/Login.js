@@ -21,7 +21,7 @@ const Login = () => {
         // Validate checkbox before submitting
        
 
-        axios.post('http://localhost:3000/api/adminlogin', values)
+        axios.post('http://localhost:5000/api/adminlogin', values)
             .then(result => {
                 if (result.data.loginStatus) {
                     navigate('/dashboard');

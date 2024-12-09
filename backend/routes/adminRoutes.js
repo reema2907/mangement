@@ -9,12 +9,13 @@ import path from "path";
 
 const router = express.Router();
 
-// Sign-up route
+// sign up 
 router.post('/signup', async (req, res) => {
   const { firstName, lastName, password, email } = req.body;
 
   try {
-    // Hash the password before saving
+    console.log('Request received with data:', { firstName, lastName, email });
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new Admin({
@@ -24,11 +25,14 @@ router.post('/signup', async (req, res) => {
       email,
     });
 
+    console.log('New user object created:', newUser);
+
     // Save the new user
     await newUser.save();
     res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
-    res.status(400).json({ message: 'Error creating user' });
+    console.error("Error creating user:", error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 });
 
@@ -95,21 +99,31 @@ const upload = multer({ storage: storage });
 // Add Employee
 router.post("/add_employee", upload.single("image"), async (req, res) => {
     try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        const employee = new Employee({
-            name: req.body.name,
-            email: req.body.email,
-            password: hashedPassword,
-            address: req.body.address,
-            salary: req.body.salary,
-            image: req.file.filename,
-            category_id: req.body.category_id,
-        });
-        await employee.save();
-        res.json({ Status: true });
-    } catch (err) {
-        res.json({ Status: false, Error: err.message });
-    }
+    
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const employee = new Employee({
+        name: req.body.name,
+        email: req.body.email,
+        password: hashedPassword,
+        address: req.body.address,
+        salary: req.body.salary,
+        image: req.file ? req.file.filename : null,
+        category_id: req.body.category_id,
+    });    
+    await employee.save();
+   
+    const populatedEmployee = await Employee.findById(employee._id).populate("category_id", "name");
+   
+    res.status(201).json({
+        Status: true,
+        Employee: populatedEmployee,
+    });
+} catch (err) {
+    res.status(510).json({
+        Status: false,
+        Error: err.message,
+    });
+}
 });
 
 // Get Employees
@@ -135,20 +149,29 @@ router.get("/employee/:id", async (req, res) => {
 // Edit Employee
 router.put("/edit_employee/:id", async (req, res) => {
     try {
+        // Extract the fields to update from the request body
+        const updateData = {};
+
+        if (req.body.name) updateData.name = req.body.name;
+        if (req.body.email) updateData.email = req.body.email;
+        if (req.body.salary) updateData.salary = req.body.salary;
+        if (req.body.address) updateData.address = req.body.address;
+        if (req.body.category_id) updateData.category_id = req.body.category_id;
+
+        // Find and update the employee
         const updatedEmployee = await Employee.findByIdAndUpdate(
             req.params.id,
-            {
-                name: req.body.name,
-                email: req.body.email,
-                salary: req.body.salary,
-                address: req.body.address,
-                category_id: req.body.category_id,
-            },
-            { new: true }
+            updateData,
+            { new: true } // Return the updated document
         );
+
+        if (!updatedEmployee) {
+            return res.status(404).json({ Status: false, Error: "Employee not found" });
+        }
+
         res.json({ Status: true, Result: updatedEmployee });
     } catch (err) {
-        res.json({ Status: false, Error: err.message });
+        res.status(500).json({ Status: false, Error: err.message });
     }
 });
 

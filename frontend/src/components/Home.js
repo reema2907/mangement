@@ -12,16 +12,19 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await adminCount();
-        await employeeCount();
-        await salaryCount();
-        await AdminRecords();
-      } catch (err) {
-        setError('Failed to fetch data');
-        console.log(err);
-      } finally {
-        setLoading(false); // End loading once all data is fetched
-      }
+      console.log('Fetching data...');
+      await adminCount();
+      await employeeCount();
+      await salaryCount();
+      await AdminRecords();
+      console.log('All data fetched successfully');
+    } catch (err) {
+      setError('Failed to fetch data');
+      console.error('Fetch data error:', err);
+    } finally {
+      setLoading(false);
+      console.log('Loading finished');
+    }
     };
     
     fetchData();
@@ -29,7 +32,7 @@ const Home = () => {
 
   const AdminRecords = async () => {
     try {
-      const result = await axios.get('http://localhost:3000/api/admin_records');
+      const result = await axios.get('http://localhost:5000/api/admin_records');
       if (result.data.Status) {
         setAdmins(result.data.Result);
       } else {
@@ -41,21 +44,26 @@ const Home = () => {
   };
 
   const adminCount = async () => {
-    try {
-      const result = await axios.get('http://localhost:3000/api/admin_count');
-      if (result.data.Status) {
-        setAdminTotal(result.data.Result[0].admin);
-      }
-    } catch (err) {
-      console.log('Error fetching admin count:', err);
+  try {
+    const result = await axios.get('http://localhost:5000/api/admin_count');
+    console.log('API Response:', result.data); // Log the API response for debugging
+
+    if (result.data.Status) {
+      // Directly access the 'admin' field from 'Result'
+      setAdminTotal(result.data.Result.admin);
+    } else {
+      console.error('Unexpected API response structure:', result.data);
     }
-  };
+  } catch (err) {
+    console.error('Error fetching admin count:', err.response?.data || err.message);
+  }
+};
 
   const employeeCount = async () => {
     try {
-      const result = await axios.get('http://localhost:3000/api/employee_count');
+      const result = await axios.get('http://localhost:5000/api/employee_count');
       if (result.data.Status) {
-        setEmployeeTotal(result.data.Result[0].employee);
+        setEmployeeTotal(result.data.Result.employee);
       }
     } catch (err) {
       console.log('Error fetching employee count:', err);
@@ -64,9 +72,9 @@ const Home = () => {
 
   const salaryCount = async () => {
     try {
-      const result = await axios.get('http://localhost:3000/api/salary_count');
+      const result = await axios.get('http://localhost:5000/api/salary_count');
       if (result.data.Status) {
-        setSalaryTotal(result.data.Result[0].salaryOFEmp);
+        setSalaryTotal(result.data.Result.salaryOFEmp);
       } else {
         alert(result.data.Error);
       }
@@ -133,11 +141,9 @@ const Home = () => {
                   <td>{a.email}</td>
                   <td>
                     <button className="btn btn-info btn-sm me-2">
-                      Edit
-                    </button>
-                    <button className="btn btn-warning btn-sm">
                       Delete
                     </button>
+                    
                   </td>
                 </tr>
               ))

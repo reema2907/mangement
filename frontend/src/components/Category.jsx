@@ -7,7 +7,7 @@ const Category = () => {
       const [category, setCategory] = useState([])
 
     useEffect(()=> {
-        axios.get('http://localhost:3000/api/category')
+        axios.get('http://localhost:5000/api/category')
         .then(result => {
             if(result.data.Status) {
                 setCategory(result.data.Result);
@@ -27,7 +27,8 @@ const Category = () => {
             <table className='table'>
                 <thead>
                     <tr>
-                        <th>Name</th>
+                          <th>Name</th>
+                          <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,7 +36,10 @@ const Category = () => {
                         category.map(c => (
                             <tr>
                                 <td>{c.name}</td>
+                                <button  className="btn btn-info btn-sm me-2">Delete</button>
+                                <button className="btn btn-warning btn-sm">Update</button>
                             </tr>
+                            
                         ))
                     }
                 </tbody>

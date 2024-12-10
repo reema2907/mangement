@@ -85,6 +85,17 @@ router.post("/add_category", async (req, res) => {
     }
 });
 
+// delete category 
+router.delete("/delete_category/:id", async(req, res) => {
+
+   try {
+        await Category.findByIdAndDelete(req.params.id);
+        res.json({ Status: true });
+    } catch (err) {
+        res.json({ Status: false, Error: err.message });
+    }
+})
+
 // Image Upload
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -109,6 +120,7 @@ router.post("/add_employee", upload.single("image"), async (req, res) => {
         salary: req.body.salary,
         image: req.file ? req.file.filename : null,
         category_id: req.body.category_id,
+        
     });    
     await employee.save();
    
@@ -129,7 +141,7 @@ router.post("/add_employee", upload.single("image"), async (req, res) => {
 // Get Employees
 router.get("/employee", async (req, res) => {
     try {
-        const employees = await Employee.find().populate("category_id");
+        const employees = await Employee.find().populate("category_id","name");
         res.json({ Status: true, Result: employees });
     } catch (err) {
         res.json({ Status: false, Error: err.message });
@@ -139,7 +151,7 @@ router.get("/employee", async (req, res) => {
 // Get Employee by ID
 router.get("/employee/:id", async (req, res) => {
     try {
-        const employee = await Employee.findById(req.params.id).populate("category_id");
+        const employee = await Employee.findById(req.params.id).populate("category_id","name");
         res.json({ Status: true, Result: employee });
     } catch (err) {
         res.json({ Status: false, Error: err.message });

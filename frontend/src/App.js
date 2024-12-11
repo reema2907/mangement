@@ -18,10 +18,11 @@ function App() {
   <Routes>
     <Route path="/" element={<Navigate to="/adminlogin" />} /> {/* Redirect root to login */}
         <Route path="/adminlogin" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
+        
         
     <Route path="/dashboard" element={<Dashboard />}>
-      <Route index element={<Home />} />  {/* Default route for /dashboard */}
+        <Route index element={<Home />} />  {/* Default route for /dashboard */}
+        <Route path="add_admin" element={<SignUp />} />
       <Route path="employee" element={<Employee />} />
       <Route path="category" element={<Category />} />
       <Route path="add_category" element={<AddCategory />} />

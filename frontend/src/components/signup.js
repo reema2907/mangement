@@ -27,7 +27,7 @@ function SignUp() {
       // Check if the signup was successful
       if (response.status === 201) {
         alert('Sign-up successful! Please log in.');
-        navigate('/'); // Redirect to login after successful sign-up
+        navigate('/dashboard'); // Redirect to login after successful sign-up
       } else {
         alert('Sign-up failed. Please try again.');
       }

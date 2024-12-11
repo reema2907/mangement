@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [adminTotal, setAdminTotal] = useState(0);
@@ -43,19 +44,7 @@ const Home = () => {
     }
   };
   
-  const AdminDelete = async (id) => {
-  try {
-    const result = await axios.delete(`http://localhost:5000/api/admin_delete/${id}`);
-    
-    if (result.data.Status) {
-       setAdmins(admins.filter((a) => a._id !== id));
-    } else {
-      alert(result.data.Error);
-    }
-  } catch (err) {
-    console.error("Error in deleting admin", err);
-  }
-};
+  
   const adminCount = async () => {
   try {
     const result = await axios.get('http://localhost:5000/api/admin_count');
@@ -139,12 +128,13 @@ const Home = () => {
         </div>
       </div>
       <div className='mt-4 px-5 pt-3'>
-        <h3>List of Admins</h3>
+       <Link to="/dashboard/add_admin" className='btn btn-success'>Add Admin</Link>
         <table className='table'>
           <thead>
             <tr>
               <th>Email</th>
-              <th>Action</th>
+              <th>Name</th>
+             
             </tr>
           </thead>
           <tbody>
@@ -152,12 +142,8 @@ const Home = () => {
               admins.map(a => (
                 <tr key={a.email}>
                   <td>{a.email}</td>
-                   <td>
-                    <button  className="btn btn-info btn-sm me-2" onClick={() => AdminDelete(a._id)}>
-                      Delete
-                    </button>
-                    
-                  </td>
+                  <td>{a.firstName} {a.lastName}</td>
+                   
                 </tr>
               ))
             }

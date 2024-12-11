@@ -85,15 +85,7 @@ router.post("/add_category", async (req, res) => {
         res.json({ Status: false, Error: err.message });
     }
 });
-// delete admin
-router.delete("/admin_delete/:id", async(req,res) => {
-    try{
-        await Admin.findByIdAndDelete(req.params.id);
-        res.json({ Status: true });
-    } catch (err) {
-        res.json({ Status: false, Error: err.message });
-    }
-})
+
 // delete category 
 router.delete("/delete_category/:id", async(req, res) => {
 

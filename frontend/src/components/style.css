@@ -30,3 +30,7 @@ ul li :hover {
     height: 300px;
     border-radius: 50%;
 }
+.custom-blue {
+  background-color: rgb(31, 31, 176) !important;
+  color: white !important; /* For better readability */
+}

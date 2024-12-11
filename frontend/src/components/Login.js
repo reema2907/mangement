@@ -29,9 +29,7 @@ const Login = () => {
             })
             .catch(err => console.log(err));
     };
-    const handleNavigateToSignUp = () => {
-    navigate('/signup'); // Navigate to the sign-up page
-    };
+    
 
     
     return (
@@ -52,9 +50,12 @@ const Login = () => {
                             onChange={(e) => setValues({ ...values, password: e.target.value })}
                             className='form-control rounded-0' />
                     </div>
-                    <button className='btn btn-success w-100 rounded-0 mb-2'>Log in</button>                  
+                    <button className='btn btn-success w-100 rounded-0 mb-2'>Log in</button>  
+                    <select className='btn btn-success w-50 rounded-0 mb-1 custom-blue ' id="role" name="role" required>
+                        <option value="admin">Admin</option>
+                        <option value="employee">Employee</option>
+                    </select>  
                 </form>
-                 <button className='btn btn-success w-100 rounded-0 mb-2' onClick={handleNavigateToSignUp}>SignUp</button>
             </div>
         </div>
     );

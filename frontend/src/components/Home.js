@@ -42,7 +42,20 @@ const Home = () => {
       console.log('Error fetching admin records:', err);
     }
   };
-
+  
+  const AdminDelete = async (id) => {
+  try {
+    const result = await axios.delete(`http://localhost:5000/api/admin_delete/${id}`);
+    
+    if (result.data.Status) {
+       setAdmins(admins.filter((a) => a._id !== id));
+    } else {
+      alert(result.data.Error);
+    }
+  } catch (err) {
+    console.error("Error in deleting admin", err);
+  }
+};
   const adminCount = async () => {
   try {
     const result = await axios.get('http://localhost:5000/api/admin_count');
@@ -131,7 +144,7 @@ const Home = () => {
           <thead>
             <tr>
               <th>Email</th>
-              
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -139,7 +152,12 @@ const Home = () => {
               admins.map(a => (
                 <tr key={a.email}>
                   <td>{a.email}</td>
-                  
+                   <td>
+                    <button  className="btn btn-info btn-sm me-2" onClick={() => AdminDelete(a._id)}>
+                      Delete
+                    </button>
+                    
+                  </td>
                 </tr>
               ))
             }

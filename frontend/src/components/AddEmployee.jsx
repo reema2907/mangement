@@ -1,3 +1,4 @@
+// Frontend: AddEmployee Component
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +7,7 @@ const AddEmployee = () => {
   const [employee, setEmployee] = useState({
     name: "",
     email: "",
+    username: "",
     password: "",
     salary: "",
     address: "",
@@ -15,6 +17,7 @@ const AddEmployee = () => {
 
   const [category, setCategory] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
+  const [loading, setLoading] = useState(false); // To handle loading states
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,17 +30,21 @@ const AddEmployee = () => {
           alert(result.data.Error);
         }
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.error("Error fetching categories:", err);
+        alert("Failed to load categories. Please try again later.");
+      })
       .finally(() => setLoadingCategories(false));
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    
     const formData = new FormData();
     formData.append("name", employee.name);
     formData.append("email", employee.email);
+    formData.append("username", employee.username);
     formData.append("password", employee.password);
     formData.append("address", employee.address);
     formData.append("salary", employee.salary);
@@ -48,22 +55,40 @@ const AddEmployee = () => {
       .post("http://localhost:5000/api/add_employee", formData)
       .then((result) => {
         if (result.data.Status) {
-          // Reset form and redirect
+          // Send email after adding employee successfully
+          axios
+            .post("http://localhost:5000/api/send_email", {
+              employeeusername: employee.username,
+              employeeEmail: employee.email,
+              employeePassword: employee.password,
+            })
+            .then((response) => {
+              if (response.data.Status) {
+                alert("Employee added and email sent successfully!");
+                navigate("/dashboard/employee");
+              } else {
+                alert("Employee added, but failed to send email: " + response.data.Error);
+              }
+            })
+            .catch((err) => console.error("Error sending email:", err));
+
+          // Reset form
           setEmployee({
             name: "",
             email: "",
+            username: "",
             password: "",
             salary: "",
             address: "",
             category_id: "",
             image: "",
           });
-          navigate("/dashboard/employee");
         } else {
           alert(result.data.Error);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error("Error adding employee:", err))
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -78,9 +103,7 @@ const AddEmployee = () => {
               className="form-control rounded-0"
               placeholder="Enter Name"
               value={employee.name}
-              onChange={(e) =>
-                setEmployee({ ...employee, name: e.target.value })
-              }
+              onChange={(e) => setEmployee({ ...employee, name: e.target.value })}
             />
           </div>
           <div className="col-12">
@@ -90,9 +113,17 @@ const AddEmployee = () => {
               className="form-control rounded-0"
               placeholder="Enter Email"
               value={employee.email}
-              onChange={(e) =>
-                setEmployee({ ...employee, email: e.target.value })
-              }
+              onChange={(e) => setEmployee({ ...employee, email: e.target.value })}
+            />
+          </div>
+          <div className="col-12">
+            <label className="form-label">Username</label>
+            <input
+              type="text"
+              className="form-control rounded-0"
+              placeholder="Enter Username"
+              value={employee.username}
+              onChange={(e) => setEmployee({ ...employee, username: e.target.value })}
             />
           </div>
           <div className="col-12">
@@ -102,9 +133,7 @@ const AddEmployee = () => {
               className="form-control rounded-0"
               placeholder="Enter Password"
               value={employee.password}
-              onChange={(e) =>
-                setEmployee({ ...employee, password: e.target.value })
-              }
+              onChange={(e) => setEmployee({ ...employee, password: e.target.value })}
             />
           </div>
           <div className="col-12">
@@ -114,9 +143,7 @@ const AddEmployee = () => {
               className="form-control rounded-0"
               placeholder="Enter Salary"
               value={employee.salary}
-              onChange={(e) =>
-                setEmployee({ ...employee, salary: e.target.value })
-              }
+              onChange={(e) => setEmployee({ ...employee, salary: e.target.value })}
             />
           </div>
           <div className="col-12">
@@ -126,9 +153,7 @@ const AddEmployee = () => {
               className="form-control rounded-0"
               placeholder="Enter Address"
               value={employee.address}
-              onChange={(e) =>
-                setEmployee({ ...employee, address: e.target.value })
-              }
+              onChange={(e) => setEmployee({ ...employee, address: e.target.value })}
             />
           </div>
           <div className="col-12">
@@ -136,9 +161,7 @@ const AddEmployee = () => {
             <select
               className="form-select"
               value={employee.category_id}
-              onChange={(e) =>
-                setEmployee({ ...employee, category_id: e.target.value })
-              }
+              onChange={(e) => setEmployee({ ...employee, category_id: e.target.value })}
               disabled={loadingCategories || category.length === 0}
             >
               {loadingCategories ? (
@@ -164,16 +187,12 @@ const AddEmployee = () => {
             <input
               type="file"
               className="form-control rounded-0"
-              onChange={(e) =>
-                setEmployee({ ...employee, image: e.target.files[0] })
-              }
+              onChange={(e) => setEmployee({ ...employee, image: e.target.files[0] })}
             />
           </div>
-          <div className="col-12">
-            <button type="submit" className="btn btn-primary w-100">
-              Add Employee
-            </button>
-          </div>
+          <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+            {loading ? "Processing..." : "Add Employee and Send Credentials"}
+          </button>
         </form>
       </div>
     </div>

@@ -9,6 +9,8 @@ import AddCategory from './components/AddCategory';
 import SignUp from './components/signup.js';
 import EditEmployee from './components/EditEmployee';
 import AddEmployee from './components/AddEmployee.jsx';
+import Payslip from './components/payslip.js';
+
 
 function App() {
   return (
@@ -25,6 +27,7 @@ function App() {
       <Route path="add_category" element={<AddCategory />} />
      <Route path="add_employee" element={<AddEmployee/>} />
       <Route path="edit_employee/:id" element={<EditEmployee />} />
+     <Route path="payslip" element={<Payslip />} />
     </Route>
   </Routes>
 </Router>

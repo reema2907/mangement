@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import multer from "multer";
 import path from "path";
+import nodemailer from "nodemailer";
 
 const router = express.Router();
 
@@ -84,7 +85,15 @@ router.post("/add_category", async (req, res) => {
         res.json({ Status: false, Error: err.message });
     }
 });
-
+// delete admin
+router.delete("/admin_delete/:id", async(req,res) => {
+    try{
+        await Admin.findByIdAndDelete(req.params.id);
+        res.json({ Status: true });
+    } catch (err) {
+        res.json({ Status: false, Error: err.message });
+    }
+})
 // delete category 
 router.delete("/delete_category/:id", async(req, res) => {
 
@@ -115,6 +124,7 @@ router.post("/add_employee", upload.single("image"), async (req, res) => {
     const employee = new Employee({
         name: req.body.name,
         email: req.body.email,
+        username: req.body.username,
         password: hashedPassword,
         address: req.body.address,
         salary: req.body.salary,
@@ -166,6 +176,7 @@ router.put("/edit_employee/:id", async (req, res) => {
 
         if (req.body.name) updateData.name = req.body.name;
         if (req.body.email) updateData.email = req.body.email;
+        if (req.body.username) updateData.username = req.body.username;
         if (req.body.salary) updateData.salary = req.body.salary;
         if (req.body.address) updateData.address = req.body.address;
         if (req.body.category_id) updateData.category_id = req.body.category_id;
@@ -246,7 +257,36 @@ router.get('/admin_records', async (req, res) => {
     }
 });
 
+// sending email 
+// Setup Nodemailer Transporter
+const transporter = nodemailer.createTransport({
+  service: "gmail",  // You can use other providers as well
+  auth: {
+    user: "reema708256@gmail.com",  // Use your email here
+    pass: "clhu ctdw ycsg imaf",  // Use your email password or App-specific password
+  },
+});
 
+// Send email route
+router.post("/send_email", (req, res) => {
+  const { employeeEmail, employeePassword ,employeeusername} = req.body;
+
+  const mailOptions = {
+    from: "reema708256@gmail.com",  // Admin email
+    to: employeeEmail,             // Employee's personal email
+    subject: "Your Login Credentials",
+    text: `Hello, \n\nHere are your login details:\nUsername: ${employeeusername}\nPassword: ${employeePassword}\n\nBest regards,\nReema's Company Name`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      return res.status(500).json({ Status: false, Error: "Email send failed" });
+    } else {
+      return res.status(200).json({ Status: true, Message: "Email sent successfully" });
+    }
+  });
+});
 router.get('/logout', (req, res) => {
     res.clearCookie('token')
     return res.json({ Status: true })

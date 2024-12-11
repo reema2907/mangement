@@ -50,6 +50,7 @@ const Employee = () => {
               <th>Name</th>
     
               <th>Email</th>
+              <th>Username</th>
               <th>Address</th>
               <th>Salary</th>
                <th>Category</th>
@@ -63,6 +64,7 @@ const Employee = () => {
                 <td>{e.name}</td>
                
                 <td>{e.email}</td>
+                <td>{e.username}</td>
                 <td>{e.address}</td>
                 <td>{e.salary}</td>
                 <td>{e.category_id.name}</td>

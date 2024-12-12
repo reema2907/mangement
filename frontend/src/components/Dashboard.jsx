@@ -85,7 +85,7 @@ const Dashboard = () => {
             </div>
         <div className="col p-0 m-0">
             <div className="p-2 d-flex justify-content-center shadow">
-                <h2>Faculty Management System</h2>
+                <h2>Employees Management System</h2>
             </div>
             <Outlet/>
         </div>

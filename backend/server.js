@@ -12,7 +12,7 @@ const app = express();
 app.use(cors({
   origin: 'http://localhost:3000', // Frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true, // If you need to handle cookies or authentication
+  credentials: true, // to handle cookies or authentication
 }));
 
 // Middleware

@@ -7,5 +7,5 @@
 ![Screenshot 2024-12-24 232322](https://github.com/user-attachments/assets/ada33429-e1f2-431f-8aff-154b278f79c1)
 ![Screenshot 2024-12-24 232414](https://github.com/user-attachments/assets/be0cc096-6bf7-4483-a181-b2112a2f2409)
 ![Screenshot 2024-12-24 232436](https://github.com/user-attachments/assets/9e63ba69-454c-4085-bcc1-d8c1195c537e)
-
+![Screenshot 2025-01-05 175018](https://github.com/user-attachments/assets/0bf5455b-6832-49f3-a1c4-80438d2b0072)
 
